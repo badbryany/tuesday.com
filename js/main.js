@@ -4,7 +4,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
   timeZone: 'CET',
   locale: 'de',
   initialView: 'timeGridWeek',
-  events: 'https://fullcalendar.io/demo-events.json',//https://fullcalendar.io/demo-events.json
+  events: '/terminplanung/api/events.php',//https://fullcalendar.io/demo-events.json
   editable: true,
   selectable: true,
   eventDragStart: function(info) {
@@ -16,7 +16,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
           location.reload();
         }
       };
-      xhttp.open("POST", "events.php", true);
+      xhttp.open("POST", "/terminplanung/api/events.php", true);
       xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
       xhttp.send("start=" + start + "&end=" + end + "&type=" + typ + "&title=" + title);
     }else {
@@ -89,7 +89,7 @@ if (title) {
         location.reload();
       }
     };
-    xhttp.open("POST", "events.php", true);
+    xhttp.open("POST", "/terminplanung/api/events.php", true);
     xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhttp.send("start=" + start + "&end=" + end + "&type=" + typ + "&title=" + title);
   }
