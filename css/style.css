@@ -1,0 +1,15 @@
+.event_config{
+  display: flex;
+  justify-content: center;
+}
+.event_config div{
+  border: 1px #000 solid;
+  text-align: center;
+  padding: 20px;
+}
+.swal-wide{
+    width: 90vw !important;
+}
+.event_config input[type="text"]{
+  
+}

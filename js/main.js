@@ -4,24 +4,12 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
   timeZone: 'CET',
   locale: 'de',
   initialView: 'timeGridWeek',
-  events: '/terminplanung/api/events.php',//https://fullcalendar.io/demo-events.json
+  events: '/terminplanung/api/getEvents.php',//https://fullcalendar.io/demo-events.json
   editable: true,
   selectable: true,
+  firstDay: 1,
   eventDragStart: function(info) {
     console.log(info.view.getCurrentData().viewSpec.optionOverrides/*.optionDefaults*/);
-    if (name === info.event.extendedProps.owner) {
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          location.reload();
-        }
-      };
-      xhttp.open("POST", "/terminplanung/api/events.php", true);
-      xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      xhttp.send("start=" + start + "&end=" + end + "&type=" + typ + "&title=" + title);
-    }else {
-      console.log("nö");
-    }
     console.log(info.event.extendedProps.owner);
   },
   select: function(info) {
@@ -31,7 +19,41 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
 calendar.render();
 
 async function date(start, end) {
-const { value: title } = await Swal.fire({
+  var html = "<div class='event_config'><div class='title'><h1>Titel</h1><input type='text' id='title' placeholder='Titel'></div><div class='type'><h1>Welche art von Termin ist das?</h1><select id='type'><option value='1'>1</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option></select></div><div class='tags'><h1>Für wen ist dieser Termin relevant?</h1><span id='tags'><label><input type='checkbox' class='checkbox' value='1'>group 1</label><label><input type='checkbox' class='checkbox' value='2'>group 2</label><label><input type='checkbox' class='checkbox' value='3'>group 3</label><label><input type='checkbox' class='checkbox' value='4'>group 4</label></span></div></div>";
+  Swal.fire({
+    title: '',
+    icon: 'question',
+    html: html,
+    customClass: "swal-wide",
+    showCloseButton: false,
+    showCancelButton: true,
+    focusConfirm: false,
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Abbrechen',
+    }).then((foo) => {
+      if (foo) {
+        var title = document.getElementById("title").value;
+        var type = document.getElementById("type").value;
+        var tags = [];
+        for (var i = 0; i < document.getElementsByClassName("checkbox").length; i++) {
+          if (document.getElementsByClassName("checkbox")[i].checked) {
+            tags.push(document.getElementsByClassName("checkbox")[i].value);
+          }
+        }
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            //console.log(this.responseText);
+            location.reload();
+          }
+        };
+        xhttp.open("POST", "/terminplanung/api/createEvent.php", true);
+        xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhttp.send("start=" + start + "&end=" + end + "&type=" + type + "&title=" + title + "&tags=" + tags.toString());
+      }
+    });
+
+/*const { value: title } = await Swal.fire({
   title: 'Titel',
   icon: 'question',
   input: 'text',
@@ -89,10 +111,8 @@ if (title) {
         location.reload();
       }
     };
-    xhttp.open("POST", "/terminplanung/api/events.php", true);
+    xhttp.open("POST", "/terminplanung/api/createEvent.php", true);
     xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhttp.send("start=" + start + "&end=" + end + "&type=" + typ + "&title=" + title);
-  }
-
-}
+  }*/
 }
