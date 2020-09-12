@@ -12,6 +12,19 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     console.log(info.view.getCurrentData().viewSpec.optionOverrides/*.optionDefaults*/);
     console.log(info.event.extendedProps.owner);
   },
+  eventClick: function(info) {
+    console.log(info.event._def.extendedProps);
+    Swal.fire({
+      title: '',
+      icon: 'info',
+      html: '',
+      customClass: "swal-wide",
+      showCloseButton: true,
+      showCancelButton: false,
+      focusConfirm: true,
+      confirmButtonText: 'OK'
+      })
+  },
   select: function(info) {
     date(info.startStr, info.endStr);
   }
@@ -40,6 +53,7 @@ async function date(start, end) {
             tags.push(document.getElementsByClassName("checkbox")[i].value);
           }
         }
+        tags = JSON.stringify(tags);
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
@@ -49,70 +63,7 @@ async function date(start, end) {
         };
         xhttp.open("POST", "/terminplanung/api/createEvent.php", true);
         xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhttp.send("start=" + start + "&end=" + end + "&type=" + type + "&title=" + title + "&tags=" + tags.toString());
+        xhttp.send("start=" + start + "&end=" + end + "&type=" + type + "&title=" + title + "&tags=" + JSON.stringify(tags));
       }
     });
-
-/*const { value: title } = await Swal.fire({
-  title: 'Titel',
-  icon: 'question',
-  input: 'text',
-  //inputValue: inputValue,
-  showCancelButton: false,
-  inputValidator: (value) => {
-    if (!value) {
-      return 'Du musst ein Titel eingeben!'
-    }
-  }
-})
-
-if (title) {
-  const { value: type } = await Swal.fire({
-    title: 'Welche Art von Termin ist das?',
-    input: 'select',
-    icon: 'question',
-    inputOptions: {
-      'Typ':{
-        0:'freies_training', 1:'privat_stunde',2:'angebot',3:'veranstaltung'
-      }
-    },
-    inputPlaceholder: 'wähle einen Typ aus',
-    showCancelButton: false,
-    inputValidator: (value) => {
-      return new Promise((resolve) => {
-        if (value > 0 || value < 3) {
-          resolve()
-        } else {
-          resolve('Das ist kein Typ!')
-        }
-      })
-    }
-  })
-  if (type) {
-    switch (type.toString()) {
-      case "0":
-        typ = "freies_training";
-      break;
-      case "1":
-        typ = "privat_stunde";
-      break;
-      case "2":
-        typ = "angebot";
-      break;
-      case "3":
-        typ = "veranstaltung";
-      break;
-    }
-
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        //console.log(this.responseText);
-        location.reload();
-      }
-    };
-    xhttp.open("POST", "/terminplanung/api/createEvent.php", true);
-    xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhttp.send("start=" + start + "&end=" + end + "&type=" + typ + "&title=" + title);
-  }*/
 }

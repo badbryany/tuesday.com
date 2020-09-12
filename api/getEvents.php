@@ -6,10 +6,10 @@
     $begin = $_GET["start"];
     $end = $_GET["end"];
 
-    $types = ["freies_training", "privat_stunde", "angebot", "veranstaltung"];
+    $types = ["1", "2", "3", "4"];
     $colors = ["#fff1d6", "#d3e6ff", "#ffd9d9", "#daffe5"];
 
-    $sql = "SELECT e_id, title, type, begin, end, owner FROM events WHERE begin > :begin AND end < :end;";
+    $sql = "SELECT e_id, title, type, begin, end, owner, tags FROM events WHERE begin > :begin AND end < :end;";
 
     $sth = $db->prepare($sql);
     $sth->bindValue(":begin", $begin);
@@ -23,7 +23,8 @@
         }
       }
 
-      array_push($events, '{"e_id":"' . $row["e_id"] . '","title":"' . $row["title"] . '","start":"' . $row["begin"] . '","end":"' . $row["end"] . '", "backgroundColor":"' . $color . '", "borderColor":"' . "#999" . '", "owner":"' . $row["owner"] . '"}');
+      array_push($events, '{"e_id":"' . $row["e_id"] . '","title":"' . $row["title"] . '","start":"' . $row["begin"] . '","end":"' . $row["end"] . '", "backgroundColor":"' . $color . '", "borderColor":"' . "#999" . '", "owner":"' .
+      $row["owner"] . '","tags":' . $row["tags"] . '}');
     }
     //echo sizeof($events);
     echo "[";
