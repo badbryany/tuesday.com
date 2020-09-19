@@ -24,7 +24,7 @@
       }
 
       array_push($events, '{"e_id":"' . $row["e_id"] . '","title":"' . $row["title"] . '","start":"' . $row["begin"] . '","end":"' . $row["end"] . '", "backgroundColor":"' . $color . '", "borderColor":"' . "#999" . '", "owner":"' .
-      $row["owner"] . '","tags":' . $row["tags"] . '}');
+      $row["owner"] . '","tags":' . $row["tags"] . ',"type":"' . $row["type"] . '"}');
     }
     //echo sizeof($events);
     echo "[";

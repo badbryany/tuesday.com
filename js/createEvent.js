@@ -1,50 +1,18 @@
-var calendarEl = document.getElementById('calendar');
-
-var calendar = new FullCalendar.Calendar(calendarEl, {
-  timeZone: 'CET',
-  locale: 'de',
-  initialView: 'timeGridWeek',
-  events: '/terminplanung/api/getEvents.php',//https://fullcalendar.io/demo-events.json
-  editable: true,
-  selectable: true,
-  firstDay: 1,
-  eventDragStart: function(info) {
-    console.log(info.view.getCurrentData().viewSpec.optionOverrides/*.optionDefaults*/);
-    console.log(info.event.extendedProps.owner);
-  },
-  eventClick: function(info) {
-    console.log(info.event._def.extendedProps);
-    Swal.fire({
-      title: '',
-      icon: 'info',
-      html: '',
-      customClass: "swal-wide",
-      showCloseButton: true,
-      showCancelButton: false,
-      focusConfirm: true,
-      confirmButtonText: 'OK'
-      })
-  },
-  select: function(info) {
-    date(info.startStr, info.endStr);
-  }
-});
-calendar.render();
-
-async function date(start, end) {
+async function createEvent(start, end) {
   var html = "<div class='event_config'><div class='title'><h1>Titel</h1><input type='text' id='title' placeholder='Titel'></div><div class='type'><h1>Welche art von Termin ist das?</h1><select id='type'><option value='1'>1</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option></select></div><div class='tags'><h1>Für wen ist dieser Termin relevant?</h1><span id='tags'><label><input type='checkbox' class='checkbox' value='1'>group 1</label><label><input type='checkbox' class='checkbox' value='2'>group 2</label><label><input type='checkbox' class='checkbox' value='3'>group 3</label><label><input type='checkbox' class='checkbox' value='4'>group 4</label></span></div></div>";
   Swal.fire({
-    title: '',
+    title: 'Termin erstellen',
     icon: 'question',
     html: html,
     customClass: "swal-wide",
-    showCloseButton: false,
+    showCloseButton: true,
     showCancelButton: true,
     focusConfirm: false,
     confirmButtonText: 'OK',
     cancelButtonText: 'Abbrechen',
     }).then((foo) => {
-      if (foo) {
+      console.log(foo);
+      if (foo.isConfirmed) {
         var title = document.getElementById("title").value;
         var type = document.getElementById("type").value;
         var tags = [];
