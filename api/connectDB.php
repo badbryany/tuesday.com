@@ -1,3 +1,4 @@
 <?php
-  $db = new PDO("sqlite:/var/www/tc-saxonia");
+ include "config.php";
+  $db = new PDO($DBurl);
 ?>
