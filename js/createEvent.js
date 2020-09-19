@@ -25,8 +25,8 @@ async function createEvent(start, end) {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
-            //console.log(this.responseText);
-            location.reload();
+            calendar.addEvent({"title": title,"start": start,"end":end});
+            //location.reload();
           }
         };
         xhttp.open("POST", "/terminplanung/api/createEvent.php", true);
