@@ -18,7 +18,7 @@ function editEvent(event) {
           focusConfirm: true,
           confirmButtonText: 'OK'
         }).then((result) => {
-          if (result.dismiss != "cancel") {
+          if (result.dismiss != "cancel" || result.dismiss != "esc") {
             if (result.isConfirmed) {
               action = "save&newTitle=" + newTitle + "&newType=" + newType + "&newTags=" + JSON.stringify(newTags) + "&newBegin=" + newBegin + "&newEnd=" + newEnd;
               Swal.fire('Erfolgreich gespeichert!', '', 'success')
