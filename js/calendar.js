@@ -17,8 +17,8 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     //console.log(info.view.getCurrentData().viewSpec.optionOverrides/*.optionDefaults*/);
     //console.log(info.event.extendedProps.owner);
   },
-  eventResizeStop: function (info) {
-    console.log(info);
+  eventResize: function(info) {
+    editEvent(info, "drop");
   },
   eventClick: function(info){editEvent(info, "normal")},
   select: function(info) {
@@ -28,12 +28,23 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
 calendar.render();
 
 //get config
-  var xhttp1 = new XMLHttpRequest();
-  xhttp1.onreadystatechange = function() {
+  var groups, eventTypes;
+  var content = ["groups", "eventtypes"]
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      //console.log(this.responseText);
+      groups = this.responseText;
     }
   };
-  xhttp1.open("GET", "/terminplanung/api/config.php", true);
-  xhttp1.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhttp1.send("q=groups");
+    xhttp.open("POST", "/terminplanung/api/config.php", true);
+    xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhttp.send("config=groups");
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        eventTypes = this.responseText;
+      }
+    };
+      xhttp.open("POST", "/terminplanung/api/config.php", true);
+      xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhttp.send("config=eventtypes");
