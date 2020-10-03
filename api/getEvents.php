@@ -1,13 +1,11 @@
 <?php
   include 'connectDB.php';
+  include 'config.php';
 
   if (isset($_GET["start"]) && isset($_GET["end"])) {
     $events = [];
     $begin = $_GET["start"];
     $end = $_GET["end"];
-
-    $types = ["1", "2", "3", "4"];
-    $colors = ["#fff1d6", "#d3e6ff", "#ffd9d9", "#daffe5"];
 
     $sql = "SELECT e_id, title, type, begin, end, owner, tags FROM events WHERE begin > :begin AND end < :end;";
 
@@ -17,8 +15,8 @@
     $sth->execute();
 
     foreach ($sth->fetchAll() as $row) {
-      for ($i=0; $i < sizeof($types); $i++) {
-        if ($row["type"] === $types[$i]) {
+      for ($i=0; $i < sizeof($eventTypes); $i++) {
+        if ($row["type"] === $eventTypes[$i]) {
           $color = $colors[$i];
         }
       }
