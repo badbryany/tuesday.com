@@ -56,7 +56,7 @@ function editEvent(event, action) {
                         }
                       }
                     };
-                    xhttp1.open("POST", "/terminplanung/api/editEvent.php", true);
+                    xhttp1.open("POST", "/tuesday.com/api/editEvent.php", true);
                     xhttp1.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                     xhttp1.send("action=" + action + "&e_id=" + event.event._def.extendedProps.e_id);
                   }
@@ -73,7 +73,7 @@ function editEvent(event, action) {
           }
         }
       };
-      xhttp.open("GET", "/terminplanung/api/getSession.php", true);
+      xhttp.open("GET", "/tuesday.com/api/getSession.php", true);
       xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
       xhttp.send();
     break;
@@ -93,7 +93,7 @@ function editEvent(event, action) {
           }
         };
       }
-      xhttp.open("POST", "/terminplanung/api/editEvent.php", true);
+      xhttp.open("POST", "/tuesday.com/api/editEvent.php", true);
       xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
       xhttp.send("action=time&newBegin=" + event.event._instance.range.start.toISOString() + "&newEnd=" + event.event._instance.range.end.toISOString() + "&e_id=" + event.event._def.extendedProps.e_id);
     break;

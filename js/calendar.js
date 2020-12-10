@@ -5,7 +5,15 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
   timeZone: 'GMT +0200',
   locale: 'de',
   initialView: 'timeGridWeek',
-  events: '/terminplanung/api/getEvents.php',//https://fullcalendar.io/demo-events.json
+  /*events: [
+    {
+      title: 'my recurring event',
+      rrule: "FREQ=WEEKLY;INTERVAL=1;BYDAY=FR",
+      startTime: "12:30:00",
+      endTime: "13:30:00",
+    }
+  ],*/
+  events: '/tuesday.com/api/getEvents.php',//https://fullcalendar.io/demo-events.json
   editable: true,
   selectable: true,
   firstDay: 1,
@@ -35,7 +43,7 @@ calendar.render();
       groups = JSON.parse(this.responseText);
     }
   };
-    xhttp.open('POST', '/terminplanung/api/config.php', true);
+    xhttp.open('POST', '/tuesday.com/api/config.php', true);
     xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhttp.send('config=groups');
 
@@ -45,7 +53,7 @@ calendar.render();
         eventTypes = JSON.parse(this.responseText);
       }
     };
-    xhttp1.open('POST', '/terminplanung/api/config.php', true);
+    xhttp1.open('POST', '/tuesday.com/api/config.php', true);
     xhttp1.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhttp1.send('config=eventtypes');
 
