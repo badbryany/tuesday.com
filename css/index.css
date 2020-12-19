@@ -1,0 +1,45 @@
+:root {
+    --shadow-size: 2px;
+}
+
+img{
+    width: 150px;
+    position: absolute;
+}
+
+.header {
+    display: flex;
+}
+
+.header a {
+    text-decoration: none;
+    font-size: 1.5rem;
+    margin: 10px auto;
+    font-family: 'Dancing Script', cursive;
+}
+
+.header a span {
+    font-family: 'Dancing Script', cursive;
+    font-weight: bold;
+}
+
+.main {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.main a {
+    text-decoration: none;
+    color: #000;
+    border-radius: 4px;
+    box-shadow: var(--shadow-size) var(--shadow-size) var(--shadow-size) var(--shadow-size) rgba(0,0,0,0.2);
+    padding: 30px;
+    margin: 40px;
+    transition: 0.2s;
+}
+
+.main a:hover {
+    transform: scale(1.5);
+}
