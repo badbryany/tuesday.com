@@ -20,15 +20,18 @@
           $color = $colors[$i];
         }
       }
+      if ($row["rrule"] != "null") {   
+        $start = new DateTime($row["begin"]);
+        $end = new DateTime($row["end"]);
+        $diverenz = strval($end->format("H") - $start->format("H")) . ":" . sprintf("%02d", strval($end->format("i") - $start->format("i"))) . ":" . strval($end->format("s") - $start->format("s"));
 
-      if ($row["rrule"] != "null") {
-        $rrule = ',"rrule":"' . $row["rrule"]. '"';
-        $endName = "endTime";
-        $startName = "startTime";
+        $rrule = ',"rrule":"' . $row["rrule"]. '", "duration":"' . $diverenz . '"';
+
+        array_push($events, '{"id":"' . $row["e_id"] . '","e_id":"' . $row["e_id"] . '","title":"' . $row["title"] . '", "backgroundColor":"' . $color . '", "borderColor":"' . "#999" . '", "owner":"' .
+          $row["owner"] . '","tags":' . $row["tags"] . ',"type":"' . $row["type"] . '" ' . $rrule . '}');
       } else {
-        $endName = "end";
-        $startName = "start";
-        $rrule = "";
+        array_push($events, '{"id":"' . $row["e_id"] . '","e_id":"' . $row["e_id"] . '","title":"' . $row["title"] . '",start:"' . $row["begin"] . '",end:"' . $row["end"] . '", "backgroundColor":"' . $color . '", "borderColor":"' . "#999" . '", "owner":"' .
+          $row["owner"] . '","tags":' . $row["tags"] . ',"type":"' . $row["type"] . '}');
       }
       array_push($events, '{"id":"' . $row["e_id"] . '","e_id":"' . $row["e_id"] . '","title":"' . $row["title"] . '","'.$startName.'":"' . $row["begin"] . '","'.$endName.'":"' . $row["end"] . '", "backgroundColor":"' . $color . '", "borderColor":"' . "#999" . '", "owner":"' .
         $row["owner"] . '","tags":' . $row["tags"] . ',"type":"' . $row["type"] . '" ' . $rrule . '}');

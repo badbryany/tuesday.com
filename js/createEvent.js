@@ -54,14 +54,17 @@ function sTermin(req, start, end, title) {
     document.getElementById("intervall").value != "" ? intervall = document.getElementById("intervall").value : intervall="1"
 
     var weekdays = [];
+    //var postData = new FormData();
+    //postData.append("start", start)
     for (var i = 0; i < document.getElementsByClassName("checkbox").length; i++) {
       if (document.getElementsByClassName("checkbox")[i].checked) {
         weekdays.push(document.getElementsByClassName("checkbox")[i].value);
       }
     }
+    //postData.append("weekdays", weekdays)
     if (freq === "WEEKLY") {
-      var rrule = "RRULE:FREQ=" + freq + ";INTERVAL=" + intervall + ";BYDAY=" + weekdays.toString();
-      var time = "&start=T" + start.split("T")[1] + "&end=T" + end.split("T")[1];
+      var rrule = "DTSTART:" + start + "\\nRRULE:FREQ=" + freq + ";INTERVAL=" + intervall + ";BYDAY=" + weekdays.toString();
+      var time = "&start=" + start.split("T")[1] + "&end=" + end.split("T")[1];
     } else {
       var time = "&start:" + start + "&end:" + end;
       var rrule = "BEGIN:" + start + "\nEND:" + end + "\nRRULE:FREQ=" + freq;
@@ -76,6 +79,6 @@ function sTermin(req, start, end, title) {
         };
         xhttp.open("POST", "/tuesday.com/api/createEvent.php", true);
         xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhttp.send(req + "&rrule=" + rrule + time);
+        xhttp.send(req + "&rrule=" + rrule + time);//send(data)
   })
 }
