@@ -2,6 +2,7 @@
   include 'connectDB.php';
   include 'config.php';
 
+  header("Content-Type: application/json");
   if (isset($_GET["start"]) && isset($_GET["end"])) {
     $events = [];
     $begin = $_GET["start"];
@@ -23,23 +24,47 @@
       if ($row["rrule"] != "null") {   
         $start = new DateTime($row["begin"]);
         $end = new DateTime($row["end"]);
-        $diverenz = strval($end->format("H") - $start->format("H")) . ":" . sprintf("%02d", strval($end->format("i") - $start->format("i"))) . ":" . strval($end->format("s") - $start->format("s"));
+        $difference = strval($end->format("H") - $start->format("H")) . ":" . sprintf("%02d", strval($end->format("i") - $start->format("i"))) . ":" . strval($end->format("s") - $start->format("s"));
 
-        $rrule = ',"rrule":"' . $row["rrule"]. '", "duration":"' . $diverenz . '"';
+        $rrule = ',"rrule":"' . $row["rrule"]. '", "duration":"' . $difference . '"';
 
-        array_push($events, '{"id":"' . $row["e_id"] . '","e_id":"' . $row["e_id"] . '","title":"' . $row["title"] . '", "backgroundColor":"' . $color . '", "borderColor":"' . "#999" . '", "owner":"' .
-          $row["owner"] . '","tags":' . $row["tags"] . ',"type":"' . $row["type"] . '" ' . $rrule . '}');
+        $data = array(
+          "id" => $row["e_id"],
+          "e_id" => $row["e_id"],
+          "title" => $row["title"],
+          "backgroundColor" => $color,
+          "borderColor" => "#999",
+          "owner" => $row["owner"],
+          "tags" => json_decode($row["tags"]),
+          "type" => $row["type"],
+          "rrule" => $row["rrule"],
+          "duration" => $difference
+        );
+
+        array_push($events, $data);
       } else {
-        array_push($events, '{"id":"' . $row["e_id"] . '","e_id":"' . $row["e_id"] . '","title":"' . $row["title"] . '",start:"' . $row["begin"] . '",end:"' . $row["end"] . '", "backgroundColor":"' . $color . '", "borderColor":"' . "#999" . '", "owner":"' .
-          $row["owner"] . '","tags":' . $row["tags"] . ',"type":"' . $row["type"] . '}');
+        $data = array(
+          "id" => $row["e_id"],
+          "e_id" => $row["e_id"],
+          "title" => $row["title"],
+          "backgroundColor" => $color,
+          "borderColor" => "#999",
+          "start" => $row["begin"],
+          "end" => $row["end"],
+          "owner" => $row["owner"],
+          "tags" => json_decode($row["tags"]),
+          "type" => $row["type"]
+        );
+        array_push($events, $data);
       }
-      array_push($events, '{"id":"' . $row["e_id"] . '","e_id":"' . $row["e_id"] . '","title":"' . $row["title"] . '","'.$startName.'":"' . $row["begin"] . '","'.$endName.'":"' . $row["end"] . '", "backgroundColor":"' . $color . '", "borderColor":"' . "#999" . '", "owner":"' .
-        $row["owner"] . '","tags":' . $row["tags"] . ',"type":"' . $row["type"] . '" ' . $rrule . '}');
+      //array_push($events, '{"id":"' . $row["e_id"] . '","e_id":"' . $row["e_id"] . '","title":"' . $row["title"] . '","'.$startName.'":"' . $row["begin"] . '","'.$endName.'":"' . $row["end"] . '", "backgroundColor":"' . $color . '", "borderColor":"' . "#999" . '", "owner":"' .
+      //  $row["owner"] . '","tags":' . $row["tags"] . ',"type":"' . $row["type"] . '" ' . $rrule . '}');
       
     }
     //echo sizeof($events);
-    echo "[";
+    /*echo "[";
     echo implode( ", ", $events);
-    echo "]";
+    echo "]";*/
+    echo json_encode($events);
   }
 ?>

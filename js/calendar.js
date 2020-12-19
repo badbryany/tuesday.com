@@ -8,9 +8,8 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
   /*events: [
     {
       title: 'my recurring event',
-      rrule: "FREQ=WEEKLY;INTERVAL=1;BYDAY=FR",
-      startTime: "12:30:00",
-      endTime: "13:30:00",
+      rrule: "DTSTART:2020-12-15T09:20:00\nRRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=FR,MO\nEXDATE:20201225T092000",
+      duration: "2:00:0"
     }
   ],*/
   events: '/tuesday.com/api/getEvents.php',//https://fullcalendar.io/demo-events.json
