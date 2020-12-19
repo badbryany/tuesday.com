@@ -16,7 +16,8 @@
     $sth->bindValue(":begin", $_POST["start"]);
     $sth->bindValue(":end", $_POST["end"]);
     if (isset($_POST["rrule"])) {
-      $sth->bindValue(":rrule", $_POST["rrule"]);
+      $rrule = str_replace("\r", "", $_POST["rrule"]);
+      $sth->bindValue(":rrule", $rrule);
     } else {
       $sth->bindValue(":rrule", "null");
     }

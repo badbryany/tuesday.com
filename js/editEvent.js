@@ -36,29 +36,65 @@ function editEvent(event, action) {
                     } else if (result.isDenied) {
                       action = "delete";
                     }
-                    var xhttp1 = new XMLHttpRequest();
-                    xhttp1.onreadystatechange = function() {
-                      if (this.readyState == 4 && this.status == 200) {
-                        if (this.responseText == "true") {
-                          if (action == "delete") {
-                            event.event.remove();
-                            Swal.fire('Der Termin wurde gelöscht!', '', 'success');
-                          }else{
-                            Swal.fire('Der Termin wurde gespeichert!', '', 'success').then(() => {location.reload();});
-                          }
-                        }else {
-                          Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: "Error: " + this.responseText,
-                            footer: '<a href="">support</a>'
-                          })
+                    if (action == "delete" && event.event._def.extendedProps.isRRULE) {
+                      Swal.fire({
+                        title: "Einzel oder Serie bearbeiten?",
+                        icon: "question",
+                        showDenyButton: true,
+                        denyButtonText: "Serie",
+                        confirmButtonText: "Einzeltermin"
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          exdate = event.event._instance.range.start.toISOString();
+                          var xhttp1 = new XMLHttpRequest();
+                          xhttp1.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                              if (this.responseText == "true") {
+                                Swal.fire({
+                                  icon: 'success',
+                                  title: 'Der Termin wurde erfolgreich entfernt',
+                                  text: "Entfernt!",
+                                });
+                              }else {
+                                Swal.fire({
+                                  icon: 'error',
+                                  title: 'Oops...',
+                                  text: "Error: " + this.responseText,
+                                  footer: '<a href="">support</a>'
+                                });
+                              }
+                            }
+                          };
+                          xhttp1.open("POST", "/tuesday.com/api/editEvent.php", true);
+                          xhttp1.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                          xhttp1.send("action=" + action + "&e_id=" + event.event._def.extendedProps.e_id + "&exdata=" + exdate);
                         }
-                      }
-                    };
-                    xhttp1.open("POST", "/tuesday.com/api/editEvent.php", true);
-                    xhttp1.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                    xhttp1.send("action=" + action + "&e_id=" + event.event._def.extendedProps.e_id);
+                      });
+                    } else {
+                      var xhttp1 = new XMLHttpRequest();
+                      xhttp1.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                          if (this.responseText == "true") {
+                            if (action == "delete") {
+                              event.event.remove();
+                              Swal.fire('Der Termin wurde gelöscht!', '', 'success');
+                            }else{
+                              Swal.fire('Der Termin wurde gespeichert!', '', 'success').then(() => {calendar.refetchEvents();});
+                            }
+                          }else {
+                            Swal.fire({
+                              icon: 'error',
+                              title: 'Oops...',
+                              text: "Error: " + this.responseText,
+                              footer: '<a href="">support</a>'
+                            })
+                          }
+                        }
+                      };
+                      xhttp1.open("POST", "/tuesday.com/api/editEvent.php", true);
+                      xhttp1.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                      xhttp1.send("action=" + action + "&e_id=" + event.event._def.extendedProps.e_id);
+                    }
                   }
                 }
               }
@@ -82,7 +118,7 @@ function editEvent(event, action) {
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
           if (this.responseText == "true") {
-
+            calendar.refetchEvents();
           }else {
             Swal.fire({
               icon: 'error',

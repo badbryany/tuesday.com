@@ -3,7 +3,7 @@ if (isset($_POST["e_id"]) && isset($_POST["action"])) {
   include "session.php";
   include "connectDB.php";
 
-  $sql = "SELECT owner FROM events WHERE e_id=:eventID AND owner=:owner;";
+  $sql = "SELECT owner, rrule FROM events WHERE e_id=:eventID AND owner=:owner;";
 
   $sth = $db->prepare($sql);
   $sth->bindValue(":eventID", $_POST["e_id"]);
@@ -16,8 +16,14 @@ if (isset($_POST["e_id"]) && isset($_POST["action"])) {
   }else {
     switch ($_POST["action"]) {
       case 'delete':
-        $sql = "DELETE FROM events WHERE e_id=:event_ID AND owner=:owner;";
-        $sth = $db->prepare($sql);
+        if (isset($_POST["exdata"])) {
+          $sql = "UPDATE events SET rrule=:newRRULE WHERE e_id=:eventID AND owner=:owner;";
+          $sth = $db->prepare($sql);
+          $sth->bindValue(":newRRULE", "\n".$row["rrule"].$_POST["exdate"]);
+        } else {
+          $sql = "DELETE FROM events WHERE e_id=:event_ID AND owner=:owner;";
+          $sth = $db->prepare($sql);
+        }
       break;
       case 'save':
         $sql = "UPDATE events SET title=:newTitle, type=:newType, tags=:newTags WHERE e_id=:event_ID AND owner=:owner;";

@@ -80,7 +80,7 @@ function sTermin(req, start, end) {
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
             //calendar.addEvent({"title": title, "startTime": start, "endTime": end});
-            location.reload();
+            calender.refetchEvents();
           }
         };
         xhttp.open("POST", "/tuesday.com/api/createEvent.php", true);

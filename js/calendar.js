@@ -24,6 +24,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     createSelection("foo", info);
   },
   eventClick: function(info){
+    console.log(info);
     editEvent(info, 'normal');
   },
   select: function(info) {
