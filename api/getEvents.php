@@ -38,7 +38,8 @@
           "tags" => json_decode($row["tags"]),
           "type" => $row["type"],
           "rrule" => $row["rrule"],
-          "duration" => $difference
+          "duration" => $difference,
+          "isRRULE" => true
         );
 
         array_push($events, $data);
@@ -53,7 +54,8 @@
           "end" => $row["end"],
           "owner" => $row["owner"],
           "tags" => json_decode($row["tags"]),
-          "type" => $row["type"]
+          "type" => $row["type"],
+          "isRRULE" => false
         );
         array_push($events, $data);
       }
