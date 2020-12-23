@@ -16,10 +16,13 @@ if (isset($_POST["e_id"]) && isset($_POST["action"])) {
   }else {
     switch ($_POST["action"]) {
       case 'delete':
-        if (isset($_POST["exdata"])) {
-          $sql = "UPDATE events SET rrule=:newRRULE WHERE e_id=:eventID AND owner=:owner;";
+        if (isset($_POST["exdate"])) {
+          $_POST["exdate"] = str_replace(":", "", $_POST["exdate"]);
+          $_POST["exdate"] = str_replace("-", "", $_POST["exdate"]);
+          $_POST["exdate"] = str_replace(".000Z", "", $_POST["exdate"]);
+          $sql = "UPDATE events SET rrule=:newRRULE WHERE e_id=:event_ID AND owner=:owner;";
           $sth = $db->prepare($sql);
-          $sth->bindValue(":newRRULE", "\n".$row["rrule"].$_POST["exdate"]);
+          $sth->bindValue(":newRRULE", $row["rrule"]."\nEXDATE:".$_POST["exdate"]);
         } else {
           $sql = "DELETE FROM events WHERE e_id=:event_ID AND owner=:owner;";
           $sth = $db->prepare($sql);

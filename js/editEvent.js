@@ -54,7 +54,7 @@ function editEvent(event, action) {
                                   icon: 'success',
                                   title: 'Der Termin wurde erfolgreich entfernt',
                                   text: "Entfernt!",
-                                });
+                                }).then((r) => calendar.refetchEvents());
                               }else {
                                 Swal.fire({
                                   icon: 'error',
@@ -67,10 +67,34 @@ function editEvent(event, action) {
                           };
                           xhttp1.open("POST", "/tuesday.com/api/editEvent.php", true);
                           xhttp1.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                          xhttp1.send("action=" + action + "&e_id=" + event.event._def.extendedProps.e_id + "&exdata=" + exdate);
+                          xhttp1.send("action=" + action + "&e_id=" + event.event._def.extendedProps.e_id + "&exdate=" + exdate);
+                        } else {
+                          var xhttp1 = new XMLHttpRequest();
+                          xhttp1.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                              if (this.responseText == "true") {
+                                if (action == "delete") {
+                                  event.event.remove();
+                                  Swal.fire('Der Termin wurde gelöscht!', '', 'success');
+                                }else{
+                                  Swal.fire('Der Termin wurde gespeichert!', '', 'success').then(() => calendar.refetchEvents());
+                                }
+                              }else {
+                                Swal.fire({
+                                  icon: 'error',
+                                  title: 'Oops...',
+                                  text: "Error: " + this.responseText,
+                                  footer: '<a href="">support</a>'
+                                })
+                              }
+                            }
+                          };
+                          xhttp1.open("POST", "/tuesday.com/api/editEvent.php", true);
+                          xhttp1.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                          xhttp1.send("action=" + action + "&e_id=" + event.event._def.extendedProps.e_id);
                         }
                       });
-                    } else {
+                    } else if (action == "delete"){
                       var xhttp1 = new XMLHttpRequest();
                       xhttp1.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
