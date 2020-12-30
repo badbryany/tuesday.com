@@ -5,6 +5,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
   timeZone: 'GMT +0200',
   locale: 'de',
   initialView: 'timeGridWeek',
+  slotDuration: '00:05:00',
   /*events: [
     {
       title: 'my recurring event',
