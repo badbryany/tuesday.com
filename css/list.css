@@ -1,0 +1,11 @@
+.events {
+    display: flex;
+    margin: 0 auto;
+}
+.event {
+    border: 1px solid #ccc;
+    background-color: aliceblue;
+    padding: 20px;
+    margin: 20px;
+
+}
