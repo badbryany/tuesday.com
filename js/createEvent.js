@@ -30,8 +30,9 @@ async function createEvent(start, end) {
           var xhttp = new XMLHttpRequest();
           xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-              calendar.addEvent({"title": title,"start": start,"end":end});
-              //location.reload();
+              //calendar.addEvent({"title": title,"start": start,"end":end});
+              //calender.refetchEvents();
+              location.reload();
             }
           };
           xhttp.open("POST", "/tuesday.com/api/createEvent.php", true);
@@ -46,8 +47,8 @@ async function createEvent(start, end) {
 function sTermin(req, start, end) {
   Swal.fire({
     title: 'Serientermin',
-    html: ' <div class="sTermin"> <div class="intervall"> <p>Intervall:</p> <input type="number" id="intervall" style="width:80%" placeholder="z.B. 1->jede Woche;2->alle 2 Wochen;usw." /> </div> <div class="weekdays"> <label> <input type="checkbox" value="MO" class="checkbox"> Montag </label> <br> <label> <input type="checkbox" value="TU" class="checkbox"> Dienstag </label> <br> <label> <input type="checkbox" value="WE" class="checkbox"> Mittwoch </label> <br> <label> <input type="checkbox" value="TH" class="checkbox"> Donnerstag </label> <br> <label> <input type="checkbox" value="FR" class="checkbox"> Freitag </label> <br> <label> <input type="checkbox" value="SA" class="checkbox"> Samstag </label> <br> <label> <input type="checkbox" value="SU" class="checkbox"> Sonntag </label> </div> </div>',
-    //html: ' <div class="sTermin"> <div class="freq"> <p>Frequenz:</p> <select id="freq"> <option value="" selected disabled hidden>Hier auswählen</option> <option value="DAILY">täglich</option> <option value="WEEKLY">wöchentlich</option> <option value="MONTHLY">monatlich</option> <option value="YEARLY">jährlich</option> </select> </div> <div class="intervall"> <p>Intervall:</p> <input type="number" id="intervall" style="width:80%" placeholder="z.B. 1->jede Woche;2->alle 2 Wochen;usw." /> </div> <div class="weekdays"> <label> <input type="checkbox" value="MO" class="checkbox"> Montag </label> <br> <label> <input type="checkbox" value="TU" class="checkbox"> Dienstag </label> <br> <label> <input type="checkbox" value="WE" class="checkbox"> Mittwoch </label> <br> <label> <input type="checkbox" value="TH" class="checkbox"> Donnerstag </label> <br> <label> <input type="checkbox" value="FR" class="checkbox"> Freitag </label> <br> <label> <input type="checkbox" value="SA" class="checkbox"> Samstag </label> <br> <label> <input type="checkbox" value="SU" class="checkbox"> Sonntag </label> </div> </div>',
+    html: ' <div class="sTermin"> <div class="intervall"> <p>Intervall:</p> <input type="number" id="intervall"  min="0" step="1" style="width:80%" placeholder="z.B. 1->jede Woche;2->alle 2 Wochen;usw." /> </div> <div class="weekdays"> <label> <input type="checkbox" value="MO" class="checkbox"> Montag </label> <br> <label> <input type="checkbox" value="TU" class="checkbox"> Dienstag </label> <br> <label> <input type="checkbox" value="WE" class="checkbox"> Mittwoch </label> <br> <label> <input type="checkbox" value="TH" class="checkbox"> Donnerstag </label> <br> <label> <input type="checkbox" value="FR" class="checkbox"> Freitag </label> <br> <label> <input type="checkbox" value="SA" class="checkbox"> Samstag </label> <br> <label> <input type="checkbox" value="SU" class="checkbox"> Sonntag </label> </div> </div>',
+    //html: ' <div class="sTermin"> <div class="freq"> <p>Frequenz:</p> <select id="freq"> <option value="" selected disabled hidden>Hier auswählen</option> <option value="DAILY">täglich</option> <option value="WEEKLY">wöchentlich</option> <option value="MONTHLY">monatlich</option> <option value="YEARLY">jährlich</option> </select> </div> <div class="intervall"> <p>Intervall:</p> <input type="number" id="intervall" min="0" step="1" style="width:80%" placeholder="z.B. 1->jede Woche;2->alle 2 Wochen;usw." /> </div> <div class="weekdays"> <label> <input type="checkbox" value="MO" class="checkbox"> Montag </label> <br> <label> <input type="checkbox" value="TU" class="checkbox"> Dienstag </label> <br> <label> <input type="checkbox" value="WE" class="checkbox"> Mittwoch </label> <br> <label> <input type="checkbox" value="TH" class="checkbox"> Donnerstag </label> <br> <label> <input type="checkbox" value="FR" class="checkbox"> Freitag </label> <br> <label> <input type="checkbox" value="SA" class="checkbox"> Samstag </label> <br> <label> <input type="checkbox" value="SU" class="checkbox"> Sonntag </label> </div> </div>',
     showCancelButton: true,
     cancelButtonText: 'Abbrechen',
   }).then(data => {
@@ -64,6 +65,14 @@ function sTermin(req, start, end) {
         weekdays.push(document.getElementsByClassName("checkbox")[i].value);
       }
     }
+    
+    if (weekdays.length == 0) {
+      Swal.fire({
+        title: "Bitte wähle einen Tag aus, an dem der Termin stattfindet",
+        icon: "error"
+      });
+      return;
+    }
     //postData.append("weekdays", weekdays)
     if (freq === "WEEKLY") {
       var rrule = "DTSTART:" + start + "\nRRULE:FREQ=" + freq + ";INTERVAL=" + intervall + ";BYDAY=" + weekdays.toString();
@@ -77,13 +86,14 @@ function sTermin(req, start, end) {
     req.append("rrule", rrule);
 
     var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
-            //calendar.addEvent({"title": title, "startTime": start, "endTime": end});
-            calender.refetchEvents();
-          }
-        };
-        xhttp.open("POST", "/tuesday.com/api/createEvent.php", true);
-        xhttp.send(req);
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        //calendar.addEvent({"title": title, "startTime": start, "endTime": end});
+        //calender.refetchEvents();
+        location.reload();
+      }
+    };
+    xhttp.open("POST", "/tuesday.com/api/createEvent.php", true);
+    xhttp.send(req);
   })
 }

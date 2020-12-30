@@ -138,6 +138,15 @@ function editEvent(event, action) {
       xhttp.send();
     break;
     case "drop":
+      var newBegin, newEnd;
+      if (event.event._def.extendedProps.isRRULE) {
+        newBegin = event.event._instance.range.start.toISOString().split("T")[1];
+        newEnd = event.event._instance.range.end.toISOString().split("T")[1];  
+      } else {
+        newBegin = event.event._instance.range.start.toISOString();
+        newEnd = event.event._instance.range.end.toISOString();
+      }
+      
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -155,7 +164,7 @@ function editEvent(event, action) {
       }
       xhttp.open("POST", "/tuesday.com/api/editEvent.php", true);
       xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      xhttp.send("action=time&newBegin=" + event.event._instance.range.start.toISOString() + "&newEnd=" + event.event._instance.range.end.toISOString() + "&e_id=" + event.event._def.extendedProps.e_id);
+      xhttp.send("action=time&newBegin=" + newBegin + "&newEnd=" + newEnd + "&e_id=" + event.event._def.extendedProps.e_id);
     break;
   }//end of switch
 }//end of function editEvent()

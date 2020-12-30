@@ -36,8 +36,17 @@ if (isset($_POST["e_id"]) && isset($_POST["action"])) {
         $sth->bindValue(":newTags", $_POST["newTags"]);
       break;
       case 'time':
-        $sql = " UPDATE events SET begin=:newBegin, end=:newEnd WHERE e_id=:event_ID AND owner=:owner;";
-        $sth = $db->prepare($sql);
+        if ($row["rrule"] !== null) {
+          $sql = "UPDATE events SET begin=:newBegin, end=:newEnd, rrule=:newRrule WHERE e_id=:event_ID AND owner=:owner;";
+          $newRRULE = "";
+          $time = explode("T", explode("\n", $row["rrule"])[0])[4];
+          $newRRULE = str_replace($time, $_POST["newBegin"], $row["rrule"]);
+          $sth = $db->prepare($sql);
+          $sth->bindValue(":newRrule", $newRRULE);
+        } else {
+          $sql = "UPDATE events SET begin=:newBegin, end=:newEnd WHERE e_id=:event_ID AND owner=:owner;";
+          $sth = $db->prepare($sql);
+        }
         $sth->bindValue(":newBegin", $_POST["newBegin"]);
         $sth->bindValue(":newEnd", $_POST["newEnd"]);
       break;
